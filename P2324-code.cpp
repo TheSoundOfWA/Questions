@@ -1,44 +1,27 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <bits/stdc++.h>
 using namespace std;
 
-const int INF = 1e12;
-const int N = 5e3 + 10;
-int n;
-double x[N], y[N];
-double dis[N];
-bool vis[N];
-double ans;
-
-double get(double x1x, double y1y, double x2x, double y2y) { return sqrt(abs(x1x - x2x) * abs(x1x - x2x) + abs(y1y - y2y) * abs(y1y - y2y)); }
-
-void prim() {
-    dis[1] = 0;
-    vis[1] = 1;
-
-    double mi = INF;
-    int cnt = 1;
-    for (int i = 1; i <= n; i++) {
-        mi = INF, cnt = 1;
-        for (int j = 1; j <= n; j++)
-            if (!vis[j] && dis[j] < mi)
-                mi = dis[j], cnt = j;
-
-        vis[cnt] = 1;
-        ans += dis[cnt];
-
-        for (int j = 1; j <= n; j++) dis[j] = min(dis[j], get(x[cnt], y[cnt], x[j], y[j]));
-    }
-}
+const int N = 110;
+int w[N], c[N];
+int dp[N];
+vector<int> v[N];
 
 int main() {
-    scanf("%d", &n);
-    for (int i = 1; i <= n; i++) {
-        scanf("%lf%lf", &x[i], &y[i]);
-        dis[i] = INF;
-    }
+    int v, n, t;
+	scanf("%d%d%d", &v, &n, &t);
+	for (int i = 1; i <= n; i++) {
+        int p;
+		scanf("%d%d%d", &w[i], &c[i], &p);
+		v[p].push_back(i);
+	}
 
-    prim();
-    printf("%.2f", ans);
+	for (int i = 1; i <= t; i++)
+		for (int j = v; j >= 0; j--)
+			for (int k = 0; k < v[i].size(); k++)
+				if (w[v[i][k]] <= j)
+					dp[j] = max(dp[j], dp[j - w[v[i][k]]] + c[v[i][k]]);
+	printf("%d", dp[v]);
 
-    return 0;
+	return 0;
 }
