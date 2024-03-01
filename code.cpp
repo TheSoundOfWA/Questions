@@ -1,25 +1,29 @@
 #include <bits/stdc++.h>
-#define FOR(a, b, c) for(int a = b; a <= c; a++)
+#define ll long long
+#define FOR(type, a, b, c) for(type a = b; a <= c; a++)
 using namespace std;
 
-const int N = 5e3 + 10;
-int p[N];
-int sum[N];
-int dp[N][N];
+ll check(ll x) {
+	ll ans = 0;
+	FOR(ll, i, 2, sqrt(x)) {
+		if (i * i * i > x) break;
+		ans += x / (i * i * i);
+	}
+	return ans;
+}
 
 int main() {
-    int n, m, k; scanf("%d%d%d", &n, &m, &k);
-    FOR(i, 1, n) scanf("%d", &p[i]);
-
-    FOR(i, 1, n) sum[i] = sum[i - 1] + p[i];
-
-    FOR(i, 1, k)
-        FOR(j, m, n)
-            dp[i][j] = max(dp[i][j - 1], dp[i][j - m] + sum[j] - sum[j - m]);
-
-    int ans = 0;
-    FOR(i, 1, n) ans = max(ans, dp[k][i]);
-    printf("%d", ans);
-
-    return 0;
+	ll m; scanf("%lld", &m);
+	
+	ll l = 1, r = (ll)1e5;
+	while (l < r) {
+		ll mid = (l + r) / 2;
+		if (check(mid) >= m) r = mid;
+		else l = mid + 1;
+	}
+	
+	if (check(r) == m) printf("%lld", r);
+	else printf("-1");
+	
+	return 0;
 }
